@@ -2,18 +2,6 @@
 """
 Spyder Editor
 
-Phase 1:
-create agent class
-define agent attributes - position, selected neighbors
-place agents on grid
-agents need to be able to know about all neighbors
-randomly choose two
-use pythagorus to determine distance from each
-
-Move:
-    determine options for positions to move to
-    agents cant move to an occupied space 
-
 """
 
 # set up agent class
@@ -86,8 +74,7 @@ class Agent():
         # empty list for chosen neighbors
         self.chosen_neighbors = []
      
-        # empty list for possible moves
-        self.possible_moves = []
+        
         
     
     # check whether location is already occupied by an agent
@@ -148,80 +135,56 @@ class Agent():
       
        return([distance_1, distance_2, abs(distance_1 - distance_2)])
 
-
-
+        
 
     def get_possible_moves(self):
-    
+        # empty list for possible moves
+        possible_moves = []
+        
         if self.x > 0:
-            self.possible_moves.append((self.x-1, self.y))
+            possible_moves.append([self.x-1, self.y])
             
         if self.x < room.get_width():
-            self.possible_moves.append((self.x+1, self.y))
+            possible_moves.append([self.x+1, self.y])
             
         if self.y > 0:
-            self.possible_moves.append((self.x, self.y-1))
+            possible_moves.append([self.x, self.y-1])
             
         if self.y < room.get_height():
-            self.possible_moves.append((self.x, self.y+1))  
+            possible_moves.append([self.x, self.y+1])  
 
+        # need to add in check if occupied
+
+        return(possible_moves)
 
 
 
     def move(self):
-        move_counter = 0
         
+        current_difference = self.agent_calculate_difference()[2]
         
         possible_moves = self.get_possible_moves()
-'''        
-        if current_difference > 1:
+     
+        if current_difference > 0.5:
             for move in possible_moves:
-'''               
+                new_difference = self.move_calculate_difference(move[0],move[1])
+                if new_difference[2] < current_difference:
+                    self.x = move[0]
+                    self.y = move[1]
+                    return True
+            return False
                 
-          
-
-
-
-
-
-'''        
-
             
-        
-
-        
-    def move(self):
-        move_counter = 0
-        
-        # move to an adjacent cell that gets agent closer to equal distance
-        distance_1 = self.calculate_distance(self.chosen_neighbors[0])
-        distance_2 = self.calculate_distance(self.chosen_neighbors[1])
-        
-        possible_moves = self.get_possible_moves()
-        
-        current_difference = abs(distance_1 - distance_2)
-        
-        if current_difference > 1:
-            for move in possible_moves:
-                new_distance_1 = move.calculate_distance(self.chosen_neighbors[0])
-                new_distance_2 = move.calculate_distance(self.chosen_neighbors[1])
-                new_difference = abs(new_distance_1 - new_distance_2)
-                if move.calculate_distance()
-            
-            
-'''       
-
-
 
 
 
 
 # main
+import matplotlib.pyplot as plt 
 
 room = Room(10, 5)
 
-
-num_of_agents = 3
+num_of_agents = 5
 
 
 for i in range(num_of_agents):
@@ -233,19 +196,35 @@ agents = room.get_agent_list()
 for agent in agents:
     agent.choose_neighbors()
 
-
-for agent in agents:
-    agent.get_possible_moves()
-    
-for agent in agents:
-    agent.move()
-
-
 room.print_agents()
 
+plt.xlim(0, room.get_width())
+plt.ylim(0, room.get_height())
 
 
+end = False
 
+while not end:
+    
+    for agent in agents:
+        agent.get_possible_moves()
+    
+    
+    end = True
+    for agent in agents:
+        has_moved = agent.move()
+        if has_moved:
+            end = False
+        
+
+    room.print_agents()
+    
+
+
+    for i in range(num_of_agents):
+        plt.scatter(agents[i].x, agents[i].y)
+    
+    plt.show()
 
 
 
