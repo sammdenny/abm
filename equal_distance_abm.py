@@ -4,12 +4,11 @@ Spyder Editor
 
 """
 
-# set up agent class
-
 import random 
 import numpy
 
 
+# set up agent class
 class Room():
     
     def __init__(self, width, height):
