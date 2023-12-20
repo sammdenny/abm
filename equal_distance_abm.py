@@ -8,7 +8,7 @@ import random
 import numpy
 
 
-# set up agent class
+# set up room class
 class Room():
     
     def __init__(self, width, height):
@@ -41,7 +41,7 @@ class Room():
 
 
 
-
+# set up agent class
 class Agent():
     
     def __init__(self, room, identifier):
